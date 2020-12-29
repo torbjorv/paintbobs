@@ -35,15 +35,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this._gl.canvas.width = this._canvas.nativeElement.clientWidth;
     this._gl.canvas.height = this._canvas.nativeElement.clientHeight;
 
-      // Set clear colour to black, fully opaque
-    this._gl.clearColor(0.0, 0.0, 0.2, 1.0);
-    // Enable depth testing
-    this._gl.enable(this._gl.DEPTH_TEST);
-    // Near things obscure far things
-    this._gl.depthFunc(this._gl.LEQUAL);
-    // Clear the colour as well as the depth buffer.
-    this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
-
     const gl = this._gl
 
     const vertexShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
