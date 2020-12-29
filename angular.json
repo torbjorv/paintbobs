@@ -127,5 +127,8 @@
       }
     }
   },
-  "defaultProject": "paintbobs"
+  "defaultProject": "paintbobs",
+  "cli": {
+    "analytics": "b0d06646-9f23-457a-9ccc-c58f6b580bf3"
+  }
 }
