@@ -11,7 +11,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
   private _canvas: ElementRef | null = null;
   private _gl: WebGLRenderingContext | null = null;
 
-  constructor() { 
+  constructor() {
 
   }
 
@@ -22,11 +22,11 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
     // Try to grab the standard context. If it fails, fallback to experimental.
     if (!this._canvas) {
-      alert('TROLLS!')
+      alert('TROLLS!');
       return;
     }
 
-    this._gl = (this._canvas.nativeElement.getContext('webgl') || this._canvas.nativeElement('experimental-webgl')) as WebGLRenderingContext;
+    this._gl = this._canvas.nativeElement.getContext('webgl') as WebGLRenderingContext;
     // If we don't have a GL context, give up now... only continue if WebGL is available and working...
     if (!this._gl) {
       alert('Unable to initialize WebGL. Your browser may not support it.');
@@ -35,10 +35,10 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this._gl.canvas.width = this._canvas.nativeElement.clientWidth;
     this._gl.canvas.height = this._canvas.nativeElement.clientHeight;
 
-    const gl = this._gl
+    const gl = this._gl;
 
     const vertexShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
-    if (!vertexShader) throw "TROLLS!"
+    if (!vertexShader) { throw new Error('TROLLS!'); }
 
 
     gl.shaderSource(
@@ -107,19 +107,19 @@ export class RendererComponent implements OnInit, AfterViewInit {
       v_overlight = 0.9 + glanceLighting * 0.1;
     }
     `
-    )
-    gl.compileShader(vertexShader)
-    
+    );
+    gl.compileShader(vertexShader);
+
     // This example also uses fragment shaders - a fragment
     // shader is another small program that runs through every
     // pixel in the canvas and sets its color.
-    
+
     // In this case, if you play around with the numbers you can see how
     // this affects the lighting in the scene, as well as the border
     // radius on the confetti:
-    
-    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
-    if (!fragmentShader) throw "TROLLS!"
+
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    if (!fragmentShader) { throw new Error('TROLLS!'); }
 
     gl.shaderSource(
       fragmentShader,
@@ -133,143 +133,144 @@ export class RendererComponent implements OnInit, AfterViewInit {
       gl_FragColor = vec4(v_color, 1.0 - smoothstep(0.8, v_overlight, length(v_position)));
     }
     `
-    )
-    gl.compileShader(fragmentShader)
-    
+    );
+    gl.compileShader(fragmentShader);
+
     // Takes the compiled shaders and adds them to the canvas'
     // WebGL context so that can be used:
-    
-    const shaderProgram = gl.createProgram()
-    if (!shaderProgram) throw "TROLLS!"
 
-    gl.attachShader(shaderProgram, vertexShader)
-    gl.attachShader(shaderProgram, fragmentShader)
-    gl.linkProgram(shaderProgram)
-    gl.useProgram(shaderProgram)
-    
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
-    
+    const shaderProgram = gl.createProgram();
+    if (!shaderProgram) { throw new Error('TROLLS!'); }
+
+    gl.attachShader(shaderProgram, vertexShader);
+    gl.attachShader(shaderProgram, fragmentShader);
+    gl.linkProgram(shaderProgram);
+    gl.useProgram(shaderProgram);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+
     // We need to get/set the input variables into the shader in a
     // memory-safe way, so the order and the length of their
     // values needs to be stored.
-    
+
     const attrs = [
-      { name: "a_position", length: 2, offset: 0 }, // e.g. x and y represent 2 spaces in memory
-      { name: "a_startAngle", length: 1, offset: 2 }, // but angle is just 1 value
-      { name: "a_angularVelocity", length: 1, offset: 3 },
-      { name: "a_rotationAxisAngle", length: 1, offset: 4 },
-      { name: "a_particleDistance", length: 1, offset: 5 },
-      { name: "a_particleAngle", length: 1, offset: 6 },
-      { name: "a_particleY", length: 1, offset: 7 }
-    ]
-    
-    const STRIDE = Object.keys(attrs).length + 1
-    
+      { name: 'a_position', length: 2, offset: 0 }, // e.g. x and y represent 2 spaces in memory
+      { name: 'a_startAngle', length: 1, offset: 2 }, // but angle is just 1 value
+      { name: 'a_angularVelocity', length: 1, offset: 3 },
+      { name: 'a_rotationAxisAngle', length: 1, offset: 4 },
+      { name: 'a_particleDistance', length: 1, offset: 5 },
+      { name: 'a_particleAngle', length: 1, offset: 6 },
+      { name: 'a_particleY', length: 1, offset: 7 }
+    ];
+
+    const STRIDE = Object.keys(attrs).length + 1;
+
     // Loop through our known attributes and create pointers in memory for the JS side
     // to be able to fill into the shader.
-    
+
     // To understand this API a little bit: WebGL is based on OpenGL
     // which is a state-machine styled API. You pass in commands in a
     // particular order to render things to the screen.
-    
+
     // So, the intended usage is often not passing objects to every WebGL
     // API call, but instead passing one thing to one function, then passing
     // another to the next. So, here we prime WebGL to create an array of
     // vertex pointers:
-    
-    for (var i = 0; i < attrs.length; i++) {
-      const name = attrs[i].name
-      const length = attrs[i].length
-      const offset = attrs[i].offset
-      const attribLocation = gl.getAttribLocation(shaderProgram, name)
-      gl.vertexAttribPointer(attribLocation, length, gl.FLOAT, false, STRIDE * 4, offset * 4)
-      gl.enableVertexAttribArray(attribLocation)
+
+    for (const attr of attrs) {
+      const name = attr.name;
+      const length = attr.length;
+      const offset = attr.offset;
+      const attribLocation = gl.getAttribLocation(shaderProgram, name);
+      gl.vertexAttribPointer(attribLocation, length, gl.FLOAT, false, STRIDE * 4, offset * 4);
+      gl.enableVertexAttribArray(attribLocation);
     }
-    
+
     // Then on this line they are bound to an array in memory:
-    
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer())
-    
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+
     // Set up some constants for rendering:
-    
-    const NUM_PARTICLES = 200
-    const NUM_VERTICES = 4
-    
+
+    const NUM_PARTICLES = 200;
+    const NUM_VERTICES = 4;
+
     // Try reducing this one and hitting "Run" again,
     // it represents how many points should exist on
     // each confetti and having an odd number sends
     // it way out of whack.
-    
-    const NUM_INDICES = 6
-    
+
+    const NUM_INDICES = 6;
+
     // Create the arrays of inputs for the vertex shaders
-    const vertices = new Float32Array(NUM_PARTICLES * STRIDE * NUM_VERTICES)
-    const indices = new Uint16Array(NUM_PARTICLES * NUM_INDICES)
-    
+    const vertices = new Float32Array(NUM_PARTICLES * STRIDE * NUM_VERTICES);
+    const indices = new Uint16Array(NUM_PARTICLES * NUM_INDICES);
+
     for (let i = 0; i < NUM_PARTICLES; i++) {
-      const axisAngle = Math.random() * Math.PI * 2
-      const startAngle = Math.random() * Math.PI * 2
-      const groupPtr = i * STRIDE * NUM_VERTICES
-    
-      const particleDistance = Math.sqrt(Math.random())
-      const particleAngle = Math.random() * Math.PI * 2
-      const particleY = Math.random() * 2.2
-      const angularVelocity = Math.random() * 2 + 1
-    
+      const axisAngle = Math.random() * Math.PI * 2;
+      const startAngle = Math.random() * Math.PI * 2;
+      const groupPtr = i * STRIDE * NUM_VERTICES;
+
+      const particleDistance = Math.sqrt(Math.random());
+      const particleAngle = Math.random() * Math.PI * 2;
+      const particleY = Math.random() * 2.2;
+      const angularVelocity = Math.random() * 2 + 1;
+
       for (let j = 0; j < 4; j++) {
-        const vertexPtr = groupPtr + j * STRIDE
-        vertices[vertexPtr + 2] = startAngle       // Start angle
-        vertices[vertexPtr + 3] = angularVelocity  // Angular velocity
-        vertices[vertexPtr + 4] = axisAngle        // Angle diff
-        vertices[vertexPtr + 5] = particleDistance // Distance of the particle from the (0,0,0)
-        vertices[vertexPtr + 6] = particleAngle    // Angle around Y axis
-        vertices[vertexPtr + 7] = particleY        // Angle around Y axis
+        const vertexPtr2 = groupPtr + j * STRIDE;
+        vertices[vertexPtr2 + 2] = startAngle;       // Start angle
+        vertices[vertexPtr2 + 3] = angularVelocity;  // Angular velocity
+        vertices[vertexPtr2 + 4] = axisAngle;        // Angle diff
+        vertices[vertexPtr2 + 5] = particleDistance; // Distance of the particle from the (0,0,0)
+        vertices[vertexPtr2 + 6] = particleAngle;    // Angle around Y axis
+        vertices[vertexPtr2 + 7] = particleY;        // Angle around Y axis
       }
-    
+
       // Coordinates
-      vertices[groupPtr] = vertices[groupPtr + STRIDE * 2] = -1
-      vertices[groupPtr + STRIDE] = vertices[groupPtr + STRIDE * 3] = +1
-      vertices[groupPtr + 1] = vertices[groupPtr + STRIDE + 1] = -1
-      vertices[groupPtr + STRIDE * 2 + 1] = vertices[groupPtr + STRIDE * 3 + 1] = +1
-    
-      const indicesPtr = i * NUM_INDICES
-      const vertexPtr = i * NUM_VERTICES
-      indices[indicesPtr] = vertexPtr
-      indices[indicesPtr + 4] = indices[indicesPtr + 1] = vertexPtr + 1
-      indices[indicesPtr + 3] = indices[indicesPtr + 2] = vertexPtr + 2
-      indices[indicesPtr + 5] = vertexPtr + 3
+      vertices[groupPtr] = vertices[groupPtr + STRIDE * 2] = -1;
+      vertices[groupPtr + STRIDE] = vertices[groupPtr + STRIDE * 3] = +1;
+      vertices[groupPtr + 1] = vertices[groupPtr + STRIDE + 1] = -1;
+      vertices[groupPtr + STRIDE * 2 + 1] = vertices[groupPtr + STRIDE * 3 + 1] = +1;
+
+      const indicesPtr = i * NUM_INDICES;
+      const vertexPtr = i * NUM_VERTICES;
+      indices[indicesPtr] = vertexPtr;
+      indices[indicesPtr + 4] = indices[indicesPtr + 1] = vertexPtr + 1;
+      indices[indicesPtr + 3] = indices[indicesPtr + 2] = vertexPtr + 2;
+      indices[indicesPtr + 5] = vertexPtr + 3;
     }
 
-        // Pass in the data to the WebGL context
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW)
+    // Pass in the data to the WebGL context
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
 
-    const timeUniformLocation = gl.getUniformLocation(shaderProgram, "u_time")
-    const startTime = (window.performance || Date).now()
+    const timeUniformLocation = gl.getUniformLocation(shaderProgram, 'u_time');
+    const startTime = (window.performance || Date).now();
 
     // Start the background colour as black
-    gl.clearColor(0, 0, 0, 1)
+    gl.clearColor(0, 0, 0, 1);
 
     // Allow alpha channels on in the vertex shader
-    gl.enable(gl.BLEND)
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
     // Set the WebGL context to be the full size of the canvas
     gl.viewport(0, 0, this._canvas.nativeElement.width, this._canvas.nativeElement.height);
 
-    (function frame() {
-      gl.uniform1f(timeUniformLocation, ((window.performance || Date).now() - startTime) / 1000)
-    
-      gl.clear(gl.COLOR_BUFFER_BIT)
+    const loop = () => {
+      gl.uniform1f(timeUniformLocation, ((window.performance || Date).now() - startTime) / 1000);
+
+      gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawElements(
         gl.TRIANGLES,
         NUM_INDICES * NUM_PARTICLES,
         gl.UNSIGNED_SHORT,
         0
-      )
-      requestAnimationFrame(frame)
-    })()
+      );
+      requestAnimationFrame(loop);
+    };
+    loop();
   }
 
 }
