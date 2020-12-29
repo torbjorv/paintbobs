@@ -1,4 +1,4 @@
-# Paintbobs
+# Paintbobs [![CircleCI](https://circleci.com/gh/torbjorv/paintbobs/tree/master.svg?style=svg)](https://circleci.com/gh/torbjorv/paintbobs/tree/master)
 
 ### Deployments
 [Prod](https://torbjorv.github.io/paintbobs) | 
