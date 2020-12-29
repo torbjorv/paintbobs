@@ -1,6 +1,9 @@
 # Paintbobs
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.5.
+### Deployments
+[Prod](https://torbjorv.github.io/paintbobs) | 
+[Dev](https://torbjorv.github.io/paintbobs/versions/latest) | 
+[All](https://github.com/torbjorv/paintbobs/blob/gh-pages/versions/versions.md)
 
 ## Development server
 
