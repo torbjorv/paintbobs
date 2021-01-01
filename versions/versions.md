@@ -1,5 +1,6 @@
 | Id | Date | Deployment | Source | CI/CD | Comment |
 | -: | ---- | :--------: | :----: | :---: | ------- |
+| 22 | 01Jan2021 | [link](https://torbjorv.github.io/paintbobs/versions/22/) | [link](https://github.com/torbjorv/paintbobs/commit/fc090b1b1352667d53598a41f0170b22f3bdee55) | [link](https://circleci.com/workflow-run/396f9383-bb1b-4326-92f0-1b2294158a9e) | |
 | 17 | 30Dec2020 | [link](https://torbjorv.github.io/paintbobs/versions/17/) | [link](https://github.com/torbjorv/paintbobs/commit/c82961bf5f98af24144798522556931a53cebe6e) | [link](https://circleci.com/workflow-run/fc603a57-cb26-4981-9c3a-a8a6e9485dec) | |
 | 12 | 29Dec2020 | [link](https://torbjorv.github.io/paintbobs/versions/12/) | [link](https://github.com/torbjorv/paintbobs/commit/29ac4e7bcf8906946a9e679c2d42ff0cbd863d05) | [link](https://circleci.com/workflow-run/7e5de590-a086-4434-abde-2e4c10337c2a) | |
 | 318 | 28Dec2020 | [link](https://torbjorv.github.io/shadebobs/versions/318/) | [link](https://github.com/torbjorv/shadebobs/commit/64d0059bb41a2ab695e1f48b1315618ebae218ee) | [link](https://circleci.com/workflow-run/39714d57-8c69-4dc7-bd70-07e1f733c5cc) | |
