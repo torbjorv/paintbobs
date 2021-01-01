@@ -25,7 +25,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
     const gl = this._canvas.nativeElement.getContext('webgl') as WebGLRenderingContext;
     if (!gl) { throw new Error('TROLLS'); }
 
-    gl.canvas.width = this._canvas.nativeElement.width;
+    gl.canvas.width = this._canvas.nativeElement.clientWidth;
     gl.canvas.height = this._canvas.nativeElement.clientHeight;
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     console.log(this._canvas.nativeElement.clientWidth);
@@ -76,14 +76,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
     gl.enableVertexAttribArray(colorAttribute);
 
     // Draw
-
-    // Create a perspective matrix, a special matrix that is
-    // used to simulate the distortion of perspective in a camera.
-    // Our field of view is 45 degrees, with a width/height
-    // ratio that matches the display size of the canvas
-    // and we only want to see objects between 0.1 units
-    // and 100 units away from the camera.
-
     const fieldOfView = 45 * Math.PI / 180;   // in radians
     const aspect = gl.canvas.width / gl.canvas.height;
     const zNear = 0.1;
@@ -98,43 +90,68 @@ export class RendererComponent implements OnInit, AfterViewInit {
       zNear,
       zFar);
 
-    // Set the drawing position to the "identity" point, which is
-    // the center of the scene.
-    const modelViewMatrix = mat4.create();
-
-    // Now move the drawing position a bit to where we want to
-    // start drawing the square.
-
-    const cubeRotation = 0.0;
-    mat4.translate(modelViewMatrix,     // destination matrix
-      modelViewMatrix,     // matrix to translate
-      [-0.0, 0.0, -3.0]);  // amount to translate
-    mat4.rotate(modelViewMatrix,  // destination matrix
-      modelViewMatrix,  // matrix to rotate
-      cubeRotation,     // amount to rotate in radians
-      [0, 0, 1]);       // axis to rotate around (Z)
-    mat4.rotate(modelViewMatrix,  // destination matrix
-      modelViewMatrix,  // matrix to rotate
-      cubeRotation * .7,// amount to rotate in radians
-      [0, 1, 0]);       // axis to rotate around (X)
-
     const projectionMatrixLocation = gl.getUniformLocation(shaderProgram, 'uProjectionMatrix');
     const modelViewMatrixLocation = gl.getUniformLocation(shaderProgram, 'uModelViewMatrix');
-
+    const cameraMatrixLocation = gl.getUniformLocation(shaderProgram, 'uCameraMatrix');
 
     gl.uniformMatrix4fv(
       projectionMatrixLocation,
       false,
       projectionMatrix);
-    gl.uniformMatrix4fv(
-      modelViewMatrixLocation,
-      false,
-      modelViewMatrix);
 
-    gl.clearColor(0.5, 1.5, 0.5, 0.9);
-    gl.enable(gl.DEPTH_TEST);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+    let then = 0;
+
+    // Draw the scene repeatedly
+    const renderer = (now: number) => {
+      now *= 0.001;  // convert to seconds
+      const deltaTime = now - then;
+      then = now;
+
+      // Set the drawing position to the "identity" point, which is
+      // the center of the scene.
+      const modelViewMatrix = mat4.create();
+
+      // Now move the drawing position a bit to where we want to
+      // start drawing the square.
+
+      const cubeRotation = now;
+      mat4.translate(modelViewMatrix,
+        modelViewMatrix,
+        [-0.0, 0.0, 0.0]);
+      // mat4.rotate(modelViewMatrix,
+      //   modelViewMatrix,
+      //   cubeRotation,
+      //   [0, 0, 1]);
+      mat4.rotate(modelViewMatrix,
+        modelViewMatrix,
+        cubeRotation * .7,
+        [0, 0, 1]);
+
+      const cameraMatrix = mat4.create();
+      mat4.lookAt(
+        cameraMatrix,
+        [0, -1, -1],
+        [0, 0, 0],
+        [0, 1, 0]);
+
+      gl.uniformMatrix4fv(
+        modelViewMatrixLocation,
+        false,
+        modelViewMatrix);
+
+      gl.uniformMatrix4fv(
+        cameraMatrixLocation,
+        false,
+        cameraMatrix);
+
+      gl.clearColor(0.5, 1.5, 0.5, 0.9);
+      gl.enable(gl.DEPTH_TEST);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+      requestAnimationFrame(renderer);
+    };
+    requestAnimationFrame(renderer);
+
+
   }
-
 }
