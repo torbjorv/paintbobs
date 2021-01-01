@@ -1,5 +1,13 @@
-attribute vec3 coordinates;
+attribute vec4 aVertexPosition;
+attribute vec4 aVertexColor;
+
+uniform mat4 uModelViewMatrix;
+uniform mat4 uProjectionMatrix;
+
+varying lowp vec4 vColor;
+
 void main(void){
-    vec2 snirril = vec2(1.0, 1.0);
-    gl_Position=vec4(coordinates,1.);
+    // gl_Position = aVertexPosition;
+    gl_Position=uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+    vColor=aVertexColor;
 }
