@@ -38,40 +38,51 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
     const twirlScene = new TwirlScene(gl);
 
-    // Framebuffer
+    // Framebuffers for recursive twirling
     const level = 0;
-    const targetTexture = ShaderUtils.createTexture(gl, 1024, 1024, level);
-
-    const fb = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-
-    // attach the texture as the first color attachment
     const attachmentPoint = gl.COLOR_ATTACHMENT0;
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const twirledTextureSize = 1024;
+
+    const twirledTexture1 = ShaderUtils.createTexture(gl, twirledTextureSize, twirledTextureSize, level);
+    const fb1 = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb1);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, twirledTexture1, level);
+
+    const twirledTexture2 = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
+    const fb2 = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb2);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, twirledTexture2, level);
 
     // Texture setup
-    const texture = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
+    const checkeredTexture = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
 
-    const canvas = this._canvas;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     // Animation loop
+    let frame = 0;
     const renderer = (now: number) => {
       now *= 0.001;
 
-      // // Render twirl to texture
-      // gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-      // gl.canvas.width = 1024;
-      // gl.canvas.height = 1024;
-      // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  
-      // gl.clearColor(0.5, 1.5, 0.5, 0.9);
-      // gl.enable(gl.DEPTH_TEST);
-      // gl.clear(gl.COLOR_BUFFER_BIT);
+      // Render twirl to texture
+      gl.canvas.width = twirledTextureSize;
+      gl.canvas.height = twirledTextureSize;
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-      // twirlScene.render(gl, now);
+      if (frame % 2 === 0) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fb1);
+        gl.bindTexture(gl.TEXTURE_2D, twirledTexture2);
+
+      } else {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fb2);
+        gl.bindTexture(gl.TEXTURE_2D, twirledTexture1);
+      }
+
+      gl.clearColor(0.5, 1.5, 0.5, 0.9);
+      gl.enable(gl.DEPTH_TEST);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      twirlScene.render(gl, now);
 
       // Render final scene
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -84,7 +95,16 @@ export class RendererComponent implements OnInit, AfterViewInit {
       gl.enable(gl.DEPTH_TEST);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
+      if (frame % 2 === 0) {
+        gl.bindTexture(gl.TEXTURE_2D, twirledTexture2);
+      } else {
+        gl.bindTexture(gl.TEXTURE_2D, twirledTexture1);
+      }
+      // gl.bindTexture(gl.TEXTURE_2D, checkeredTexture);
+
       finalScene.render(gl, now);
+
+      frame++;
   
       requestAnimationFrame(renderer);
     };

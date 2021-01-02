@@ -16,20 +16,20 @@ export class TwirlScene implements Scene {
     mat4.ortho(this._projectionMatrix, -0.5, 0.5, -0.5, 0.5, 0.1, 100);
 
     this._cameraMatrix = mat4.create();
-    mat4.lookAt(this._cameraMatrix, [0, 0, -1], [0, 0, 0], [0, 1, 0]);
+    mat4.lookAt(this._cameraMatrix, [0, 0, 1], [0, 0, 0], [0, 1, 0]);
 
     const vertices = [
-      -0.5, 0.5, 0.0,
       -0.5, -0.5, 0.0,
-      0.5, -0.5, 0.0,
-      0.5, 0.5, 0.0
+      -0.5, 0.5, 0.0,
+      0.5, 0.5, 0.0,
+      0.5, -0.5, 0.0
     ];
 
     const texCoords = [
-      0.0, 1.0,
       0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0
+      0.0, 1.0,
+      1.0, 1.0,
+      1.0, 0.0
     ];
 
     const indices = [3, 2, 1, 3, 1, 0];

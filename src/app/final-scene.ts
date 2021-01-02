@@ -2,7 +2,7 @@ import { mat4 } from 'gl-matrix';
 import { Scene } from './scene';
 import { TriangleModel } from './triangle-model';
 import vertexShaderSource from './textured-vshader.glsl';
-import fragmentShaderSource from './twirl-fshader.glsl';
+import fragmentShaderSource from './texture-fshader.glsl';
 
 export class FinalScene implements Scene {
 
@@ -12,13 +12,13 @@ export class FinalScene implements Scene {
   constructor(gl: WebGLRenderingContext) {
 
     this._cameraMatrix = mat4.create();
-    mat4.lookAt(this._cameraMatrix, [0, 0, -1], [0, 0, 0], [0, 1, 0]);
+    mat4.lookAt(this._cameraMatrix, [0, 0, 1], [0, 0, 0], [0, 1, 0]);
 
     const vertices = [
-      -0.5, 0.5, 0.0,
       -0.5, -0.5, 0.0,
-      0.5, -0.5, 0.0,
-      0.5, 0.5, 0.0
+      -0.5, 0.5, 0.0,
+      0.5, 0.5, 0.0,
+      0.5, -0.5, 0.0
     ];
 
     const texCoords = [
@@ -68,7 +68,7 @@ export class FinalScene implements Scene {
       projectionMatrix);
 
     const modelViewMatrix = mat4.create();
-    const cubeRotation = now;
+    const cubeRotation = now * 0.5;
     mat4.translate(modelViewMatrix,
       modelViewMatrix,
       [-0.0, 0.0, 0.0]);
