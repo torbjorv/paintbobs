@@ -20,12 +20,35 @@ export class ShaderUtils {
   public static createArrayBuffer(gl: WebGLRenderingContext, data: BufferSource, usage: GLenum): WebGLBuffer {
 
     const buffer = gl.createBuffer();
-    if (!buffer) { throw new Error('TROLLS!!!'); }
+    if (!buffer) { throw new Error('Failed to create array buffer.'); }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 
     return buffer;
+  }
+
+  public static createElementBuffer(gl: WebGLRenderingContext, data: BufferSource, usage: GLenum): WebGLBuffer {
+
+    const buffer = gl.createBuffer();
+    if (!buffer) { throw new Error('Failed to create element buffer.'); }
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    return buffer;
+  }
+
+  public static buildProgram(gl: WebGLRenderingContext, vertexShaderSource: string, fragmentShaderSource: string): WebGLProgram {
+    const vertexShader = ShaderUtils.loadShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+    const fragmentShader = ShaderUtils.loadShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+    const shaderProgram = gl.createProgram();
+    if (!shaderProgram) { throw new Error('TROLLS!'); }
+
+    gl.attachShader(shaderProgram, vertexShader);
+    gl.attachShader(shaderProgram, fragmentShader);
+    gl.linkProgram(shaderProgram);
+    return shaderProgram;
   }
 
   public static loadTexture(gl: WebGLRenderingContext, url: string): WebGLTexture {

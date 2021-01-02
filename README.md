@@ -5,6 +5,15 @@
 [Dev](https://torbjorv.github.io/paintbobs/versions/latest) | 
 [All](https://github.com/torbjorv/paintbobs/blob/gh-pages/versions/versions.md)
 
+
+## How
+init: 
+    - texture = blank
+loop:
+    - render twirled texture + paint into 1024x1024 framebuffer
+    - render framebuffer onto quad in final scene
+    - copy framebuffer into texture
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

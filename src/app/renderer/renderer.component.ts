@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ɵɵtrustConstantHtml } from '@angular/core';
 import vertexShaderSource from './vertex-shader-simple.glsl';
 import fragmentShaderSource from './simple-frag-shader.glsl';
-import { ShaderUtils } from '../shaderutils';
+import { ShaderUtils } from '../shader-utils';
 import { mat4 } from 'gl-matrix';
+import { TriangleModel } from '../triangle-model';
 
 @Component({
   selector: 'app-renderer',
@@ -24,25 +25,12 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
     const gl = this._canvas.nativeElement.getContext('webgl') as WebGLRenderingContext;
     if (!gl) { throw new Error('TROLLS'); }
-
-    const texture = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
-
     gl.canvas.width = this._canvas.nativeElement.clientWidth;
     gl.canvas.height = this._canvas.nativeElement.clientHeight;
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    console.log(this._canvas.nativeElement.clientWidth);
-    console.log(this._canvas.nativeElement.clientHeight);
 
-    const vertexShader = ShaderUtils.loadShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = ShaderUtils.loadShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+    const texture = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
 
-    const shaderProgram = gl.createProgram();
-    if (!shaderProgram) { throw new Error('TROLLS!'); }
-
-    gl.attachShader(shaderProgram, vertexShader);
-    gl.attachShader(shaderProgram, fragmentShader);
-    gl.linkProgram(shaderProgram);
-    gl.useProgram(shaderProgram);
 
     const vertices = [
       -0.5, 0.5, 0.0,
@@ -50,7 +38,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
       0.5, -0.5, 0.0,
       0.5, 0.5, 0.0
     ];
-    const vertexBuffer = ShaderUtils.createArrayBuffer(gl, new Float32Array(vertices), gl.STATIC_DRAW);
 
     const texCoords = [
       0.0, 1.0,
@@ -58,26 +45,13 @@ export class RendererComponent implements OnInit, AfterViewInit {
       1.0, 0.0,
       1.0, 1.0
     ];
-    const texcoordBuffer  = ShaderUtils.createArrayBuffer(gl, new Float32Array(texCoords), gl.STATIC_DRAW);
 
     const indices = [3, 2, 1, 3, 1, 0];
-    const indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-    // Vertices
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    const vertexAttribute = gl.getAttribLocation(shaderProgram, 'aVertexPosition');
-    gl.vertexAttribPointer(vertexAttribute, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vertexAttribute);
+    const model = new TriangleModel(
+      gl, vertices, indices, texCoords, vertexShaderSource, fragmentShaderSource
+    );
 
-    // Texture coordinates
-    gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
-    const texCoordAttribute = gl.getAttribLocation(shaderProgram, 'aTextureCoord');
-    gl.vertexAttribPointer(texCoordAttribute, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(texCoordAttribute);
-
-    // Draw
     const fieldOfView = 45 * Math.PI / 180;   // in radians
     const aspect = gl.canvas.width / gl.canvas.height;
     const zNear = 0.1;
@@ -92,11 +66,12 @@ export class RendererComponent implements OnInit, AfterViewInit {
       zNear,
       zFar);
 
-    const projectionMatrixLocation = gl.getUniformLocation(shaderProgram, 'uProjectionMatrix');
-    const modelViewMatrixLocation = gl.getUniformLocation(shaderProgram, 'uModelViewMatrix');
-    const cameraMatrixLocation = gl.getUniformLocation(shaderProgram, 'uCameraMatrix');
-    const uSamplerLocation = gl.getUniformLocation(shaderProgram, 'u_texture_0');
-    const uTimeLocation = gl.getUniformLocation(shaderProgram, 'u_time');
+    gl.useProgram(model.shaderProgram);
+    const projectionMatrixLocation = gl.getUniformLocation(model.shaderProgram, 'uProjectionMatrix');
+    const modelViewMatrixLocation = gl.getUniformLocation(model.shaderProgram, 'uModelViewMatrix');
+    const cameraMatrixLocation = gl.getUniformLocation(model.shaderProgram, 'uCameraMatrix');
+    const uSamplerLocation = gl.getUniformLocation(model.shaderProgram, 'u_texture_0');
+    const uTimeLocation = gl.getUniformLocation(model.shaderProgram, 'u_time');
 
     // Texture setup
     gl.activeTexture(gl.TEXTURE0);
@@ -144,7 +119,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
       gl.clearColor(0.5, 1.5, 0.5, 0.9);
       gl.enable(gl.DEPTH_TEST);
       gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+      model.render(gl);
       requestAnimationFrame(renderer);
     };
     requestAnimationFrame(renderer);
