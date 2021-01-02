@@ -2,7 +2,7 @@ import { mat4 } from 'gl-matrix';
 import { Scene } from './scene';
 import { TriangleModel } from './triangle-model';
 import vertexShaderSource from './textured-vshader.glsl';
-import fragmentShaderSource from './texture-fshader.glsl';
+import fragmentShaderSource from './textured-fshader.glsl';
 
 export class FinalScene implements Scene {
 
