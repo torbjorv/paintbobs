@@ -88,4 +88,28 @@ export class ShaderUtils {
     return texture;
   }
 
+  public static createTexture(gl: WebGLRenderingContext, width: GLint, height: GLint, level: GLint): WebGLTexture {
+    // create to render to
+    const texture = gl.createTexture();
+    if (!texture) { throw new Error('TROLL IN TEXTURE!'); }
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // define size and format of level 0
+    const internalFormat = gl.RGBA;
+    const border = 0;
+    const format = gl.RGBA;
+    const type = gl.UNSIGNED_BYTE;
+    const data = null;
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+      width, height, border,
+      format, type, data);
+
+    // set the filtering so we don't need mips
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return texture;
+  }
+
 }
