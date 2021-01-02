@@ -25,7 +25,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
     const gl = this._canvas.nativeElement.getContext('webgl') as WebGLRenderingContext;
     if (!gl) { throw new Error('TROLLS'); }
 
-    const texture = ShaderUtils.loadTexture(gl, '/assets/checkers2.jpeg');
+    const texture = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
 
     gl.canvas.width = this._canvas.nativeElement.clientWidth;
     gl.canvas.height = this._canvas.nativeElement.clientHeight;
