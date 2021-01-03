@@ -1,5 +1,6 @@
 | Id | Date | Deployment | Source | CI/CD | Comment |
 | -: | ---- | :--------: | :----: | :---: | ------- |
+| 47 | 03Jan2021 | [link](https://torbjorv.github.io/paintbobs/versions/47/) | [link](https://github.com/torbjorv/paintbobs/commit/4e0221844f2f77d6fff252e143e962c61871ce07) | [link](https://circleci.com/workflow-run/2d58898a-7dae-4776-a497-409b125eaa71) | |
 | 44 | 03Jan2021 | [link](https://torbjorv.github.io/paintbobs/versions/44/) | [link](https://github.com/torbjorv/paintbobs/commit/cece65917aeeeed1e50745f0d84967806dab1383) | [link](https://circleci.com/workflow-run/860675a9-01b5-49e7-9845-a9dc2b76d4e8) | |
 | 39 | 03Jan2021 | [link](https://torbjorv.github.io/paintbobs/versions/39/) | [link](https://github.com/torbjorv/paintbobs/commit/d463f9639cd6de3d716b40d16371aea583a317bd) | [link](https://circleci.com/workflow-run/7e65afc3-0694-4d8f-8167-7568f7d07af6) | |
 | 30 | 02Jan2021 | [link](https://torbjorv.github.io/paintbobs/versions/30/) | [link](https://github.com/torbjorv/paintbobs/commit/719f36d3542555ed6bc59fb70e2b5d29dfa13937) | [link](https://circleci.com/workflow-run/976acdd3-9a83-4f4d-8186-41d22c5094d8) | |
