@@ -60,9 +60,10 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+    gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-//    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.clearColor(0.0, 0.0, 0.0, 1);
 
     // Animation loop
     let frame = 0;
@@ -70,10 +71,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
       now *= 0.001;
 
       // Render twirl to texture
-      gl.canvas.width = twirledTextureSize;
-      gl.canvas.height = twirledTextureSize;
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
       if (frame % 2 === 0) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, fb1);
         gl.bindTexture(gl.TEXTURE_2D, twirledTexture2);
@@ -83,8 +80,8 @@ export class RendererComponent implements OnInit, AfterViewInit {
         gl.bindTexture(gl.TEXTURE_2D, twirledTexture1);
       }
 
-      gl.clearColor(0.0, 0.0, 0.0, 1);
-      gl.enable(gl.DEPTH_TEST);
+      gl.viewport(0, 0, twirledTextureSize, twirledTextureSize);
+
       gl.clear(gl.COLOR_BUFFER_BIT);
 
       twirlScene.render(gl, now);
@@ -92,18 +89,14 @@ export class RendererComponent implements OnInit, AfterViewInit {
       // Render final scene
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-      gl.canvas.width = clientWidth;
-      gl.canvas.height = clientHeight;
       gl.viewport(0, 0, clientWidth, clientHeight);
 
-      gl.clearColor(0.0, 0, 0.0, 1);
-      gl.enable(gl.DEPTH_TEST);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
       if (frame % 2 === 0) {
-        gl.bindTexture(gl.TEXTURE_2D, twirledTexture2);
-      } else {
         gl.bindTexture(gl.TEXTURE_2D, twirledTexture1);
+      } else {
+        gl.bindTexture(gl.TEXTURE_2D, twirledTexture2);
       }
 
       finalScene.render(gl, now);
