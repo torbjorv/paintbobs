@@ -43,7 +43,7 @@ void main(void){
     mat3 rotation3=rotate2d(angle3);
     vec3 texcoord3=translate2d(center3)*rotation3*translate2d(-center3)*texcoord;
 
-    vec2 final=vec2(texcoord1.x+texcoord2.x,texcoord1.y+texcoord2.y)/2.;
+    vec2 final=vec2(texcoord1.x+texcoord2.x+texcoord3.x,texcoord1.y+texcoord2.y+texcoord3.y)/3.;
     
     vec4 tex_color=texture2D(u_texture_0,final);
     gl_FragColor=vec4(
