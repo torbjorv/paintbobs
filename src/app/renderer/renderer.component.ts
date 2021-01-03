@@ -48,16 +48,21 @@ export class RendererComponent implements OnInit, AfterViewInit {
     gl.bindFramebuffer(gl.FRAMEBUFFER, fb1);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, twirledTexture1, level);
 
-    const twirledTexture2 = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
+    // const twirledTexture2 = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
+    const twirledTexture2 = ShaderUtils.createTexture(gl, twirledTextureSize, twirledTextureSize, level);
     const fb2 = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, fb2);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, twirledTexture2, level);
 
     // Texture setup
-    const checkeredTexture = ShaderUtils.loadTexture(gl, 'assets/checkers2.jpeg');
+    // const checkeredTexture = ShaderUtils.loadTexture(gl, 'assets/flower.jpg');
     gl.activeTexture(gl.TEXTURE0);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+//    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
     // Animation loop
     let frame = 0;
@@ -78,7 +83,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
         gl.bindTexture(gl.TEXTURE_2D, twirledTexture1);
       }
 
-      gl.clearColor(0.5, 1.5, 0.5, 0.9);
+      gl.clearColor(0.0, 0.0, 0.0, 1);
       gl.enable(gl.DEPTH_TEST);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -91,7 +96,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
       gl.canvas.height = clientHeight;
       gl.viewport(0, 0, clientWidth, clientHeight);
 
-      gl.clearColor(0.5, 1.5, 0.5, 0.9);
+      gl.clearColor(0.0, 0, 0.0, 1);
       gl.enable(gl.DEPTH_TEST);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -100,12 +105,11 @@ export class RendererComponent implements OnInit, AfterViewInit {
       } else {
         gl.bindTexture(gl.TEXTURE_2D, twirledTexture1);
       }
-      // gl.bindTexture(gl.TEXTURE_2D, checkeredTexture);
 
       finalScene.render(gl, now);
 
       frame++;
-  
+
       requestAnimationFrame(renderer);
     };
     requestAnimationFrame(renderer);

@@ -1,5 +1,6 @@
 {
     "glsl-canvas.textures": {
         "0": "./src/assets/checkers2.jpeg",
+        "1": "./src/assets/flower.jpg",
     }
 }
