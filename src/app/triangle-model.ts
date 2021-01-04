@@ -1,5 +1,5 @@
-import { mat4, vec3 } from 'gl-matrix';
-import { AnimatedMatrix, IdentityMatrix } from './animated-matrix';
+import { vec3 } from 'gl-matrix';
+import { Matrix4 } from './animations/animations';
 import { ShaderUtils } from './shader-utils';
 
 export class TriangleModel {
@@ -16,15 +16,15 @@ export class TriangleModel {
     textureCoordinates: number[],
     vertexShaderSource: string,
     fragmentShaderSource: string,
-    public readonly animation: AnimatedMatrix = new IdentityMatrix(),
+    public readonly animation: Matrix4 = Matrix4.identity(),
     public readonly colorization: vec3 | undefined = undefined,) {
 
-      this._vertexBuffer = ShaderUtils.createArrayBuffer(gl, new Float32Array(vertices), gl.STATIC_DRAW);
-      this._indexBuffer = ShaderUtils.createElementBuffer(gl, new Uint16Array(indices), gl.STATIC_DRAW);
-      this._textureCoordinateBuffer = ShaderUtils.createArrayBuffer(gl, new Float32Array(textureCoordinates), gl.STATIC_DRAW);
+    this._vertexBuffer = ShaderUtils.createArrayBuffer(gl, new Float32Array(vertices), gl.STATIC_DRAW);
+    this._indexBuffer = ShaderUtils.createElementBuffer(gl, new Uint16Array(indices), gl.STATIC_DRAW);
+    this._textureCoordinateBuffer = ShaderUtils.createArrayBuffer(gl, new Float32Array(textureCoordinates), gl.STATIC_DRAW);
 
-      this.shaderProgram = ShaderUtils.buildProgram(gl, vertexShaderSource, fragmentShaderSource);
-    }
+    this.shaderProgram = ShaderUtils.buildProgram(gl, vertexShaderSource, fragmentShaderSource);
+  }
 
   public render(gl: WebGLRenderingContext, t: number): void {
 

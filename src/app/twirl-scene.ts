@@ -5,7 +5,7 @@ import vertexShaderSource from './textured-vshader.glsl';
 import fragmentShaderSource from './twirl-fshader.glsl';
 import textureFragmentShaderSource from './texture1-fshader.glsl';
 import { ShaderUtils } from './shader-utils';
-import { ChainedMatrix, RotatingMatrix, ScalingMatrix, TranslatingMatrix } from './animated-matrix';
+import { Matrix4 } from './animations/animations';
 
 export class TwirlScene implements Scene {
 
@@ -52,52 +52,52 @@ export class TwirlScene implements Scene {
 
     models.push(new TriangleModel(
       gl, vertices2, indices, texCoords, vertexShaderSource, textureFragmentShaderSource,
-      new ChainedMatrix([
-        new RotatingMatrix([0, 0, 1], 1 / 5),
-        new TranslatingMatrix([0.25, 0, 0]),
-        new ScalingMatrix([0.03, 0.03, 0.03]),
+      Matrix4.multiply([
+        Matrix4.rotate([0, 0, 1], (t: number) => t * Math.PI * 2 / 5),
+        Matrix4.translate(0.25, 0, 0),
+        Matrix4.scale(0.03, 0.03, 0.03),
       ]),
-      [19/255.0, 105/255.0, 122/255.0]
+      [19 / 255.0, 105 / 255.0, 122 / 255.0]
     ));
 
     models.push(new TriangleModel(
       gl, vertices2, indices, texCoords, vertexShaderSource, textureFragmentShaderSource,
-      new ChainedMatrix([
-        new RotatingMatrix([0, 0, 1], 1 / 7),
-        new TranslatingMatrix([0, 0.25, 0]),
-        new ScalingMatrix([0.02, 0.02, 0.02]),
+      Matrix4.multiply([
+        Matrix4.rotate([0, 0, 1], (t: number) => t * Math.PI * 2 / 7),
+        Matrix4.translate(0, 0.25, 0),
+        Matrix4.scale(0.02, 0.02, 0.02),
       ]),
-      [220/255.0, 100/255.0, 14/255.0]
+      [220 / 255.0, 100 / 255.0, 14 / 255.0]
     ));
 
     models.push(new TriangleModel(
       gl, vertices2, indices, texCoords, vertexShaderSource, textureFragmentShaderSource,
-      new ChainedMatrix([
-        new RotatingMatrix([0, 0, 1], 1 / 8),
-        new TranslatingMatrix([0, 0.25, 0]),
-        new ScalingMatrix([0.01, 0.01, 0.01]),
+      Matrix4.multiply([
+        Matrix4.rotate([0, 0, 1], (t: number) => t * Math.PI * 2 / 8),
+        Matrix4.translate(0, 0.25, 0),
+        Matrix4.scale(0.01, 0.01, 0.01),
       ]),
       [1.0, 1.0, 1.0]
     ));
 
     models.push(new TriangleModel(
       gl, vertices2, indices, texCoords, vertexShaderSource, textureFragmentShaderSource,
-      new ChainedMatrix([
-        new RotatingMatrix([0, 0, 1], 1 / 11),
-        new TranslatingMatrix([0, 0.25, 0]),
-        new ScalingMatrix([0.01, 0.01, 0.01]),
+      Matrix4.multiply([
+        Matrix4.rotate([0, 0, 1], (t: number) => t * Math.PI * 2 / 11),
+        Matrix4.translate(0, 0.25, 0),
+        Matrix4.scale(0.01, 0.01, 0.01),
       ]),
       [0.0, 0.0, 0.0]
     ));
 
     models.push(new TriangleModel(
       gl, vertices2, indices, texCoords, vertexShaderSource, textureFragmentShaderSource,
-      new ChainedMatrix([
-        new RotatingMatrix([0, 0, 1], 1 / 9),
-        new TranslatingMatrix([-0.25, -0.25, 0]),
-        new ScalingMatrix([0.02, 0.02, 0.02]),
+      Matrix4.multiply([
+        Matrix4.rotate([0, 0, 1], (t: number) => t * Math.PI * 2 / 9),
+        Matrix4.translate(-0.25, -0.25, 0),
+        Matrix4.scale(0.02, 0.02, 0.02),
       ]),
-      [255/255.0, 166/255.0, 54/255.0]
+      [255 / 255.0, 166 / 255.0, 54 / 255.0]
     ));
 
     this._models = models;

@@ -3,7 +3,7 @@ import { Scene } from './scene';
 import { TriangleModel } from './triangle-model';
 import vertexShaderSource from './textured-vshader.glsl';
 import fragmentShaderSource from './texture0-fshader.glsl';
-import { ChainedMatrix, RotatingMatrix } from './animated-matrix';
+import { Matrix4 } from './animations/animations';
 
 export class FinalScene implements Scene {
 
@@ -35,7 +35,7 @@ export class FinalScene implements Scene {
       gl,
       vertices, indices, texCoords,
       vertexShaderSource, fragmentShaderSource,
-      new RotatingMatrix([0, 0, 1], 1 / 20)
+      Matrix4.rotate([0, 0, 1], (t: number) => t * Math.PI * 2 / 20)
     );
 
   }

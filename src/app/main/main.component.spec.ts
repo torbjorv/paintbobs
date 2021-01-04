@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RendererComponent } from '../renderer/renderer.component';
 
 import { MainComponent } from './main.component';
 
@@ -8,9 +9,9 @@ describe('MainComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MainComponent ]
+      declarations: [MainComponent, RendererComponent],
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
