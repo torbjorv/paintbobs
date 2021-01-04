@@ -7,13 +7,16 @@ import { Matrix4 } from './animations/animations';
 
 export class FinalScene implements Scene {
 
-  private readonly _cameraMatrix: mat4;
+  private readonly _cameraMatrix: Matrix4;
   private readonly _quad: TriangleModel;
 
   constructor(gl: WebGLRenderingContext) {
 
-    this._cameraMatrix = mat4.create();
-    mat4.lookAt(this._cameraMatrix, [0, 0, 1], [0, 0, 0], [0, 1, 0]);
+    this._cameraMatrix = Matrix4.lookAt(
+      [0, -0.5, (t: number) => -Math.sin(t * 0.4) * 0.5 - 0.7],
+      [0, 0, 0],
+      [0, 1, 0]
+    );
 
     const vertices = [
       -0.5, -0.5, 0.0,
@@ -37,6 +40,8 @@ export class FinalScene implements Scene {
       vertexShaderSource, fragmentShaderSource,
       Matrix4.rotate([0, 0, 1], (t: number) => t * Math.PI * 2 / 20)
     );
+
+
 
   }
 
@@ -70,17 +75,10 @@ export class FinalScene implements Scene {
       false,
       projectionMatrix);
 
-    const cameraMatrix = mat4.create();
-    mat4.lookAt(
-      cameraMatrix,
-      [0, -0.5, -Math.sin(now * 0.4) * 0.5 - 0.7],
-      [0, 0, 0],
-      [0, 1, 0]);
-
     gl.uniformMatrix4fv(
       cameraMatrixLocation,
       false,
-      cameraMatrix);
+      this._cameraMatrix.get(now));
 
     model.render(gl, now);
   }
